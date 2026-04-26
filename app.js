@@ -21,6 +21,7 @@ const User = require('./models/user.js');
 const userRouter = require('./routes/user.js');
 
 const dbUrl=process.env.ATLASDB_URL;
+console.log("DB URL:", dbUrl);
 
 main().then(()=>{
     console.log("Connected to MongoDB");
@@ -36,7 +37,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.engine('ejs', ejsMate);
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 const store=MongoStore.create({
@@ -87,6 +88,10 @@ app.use((req,res,next)=>{
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
+
+app.get("/", (req, res) => {
+    res.redirect("/listings");
+});
 
 // app.get("/testListing", async (req,res)=>{
 //     let sampleListing = new Listing({
